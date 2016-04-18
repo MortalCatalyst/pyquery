@@ -1,0 +1,6 @@
+name: pyquery
+dependencies:
+    - ipython
+    - lxml
+    - pip:
+        - pyquery
