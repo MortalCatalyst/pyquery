@@ -1,33 +1,35 @@
 from pyquery import PyQuery as pq
 import pandas as pd
-import os
-import sys
+import argparse
+# from glob import glob
 
-if len(sys.argv) == 2:
-    print("no params")
-    sys.exit(1)
 
-dir = sys.argv[1]
-mask = sys.argv[2]
+parser = argparse.ArgumentParser(description=None)
 
-files = os.listdir(dir)
 
-fileResult = filter(lambda x: x.endswith(mask), files)
+def GetArgs(parser):
+    """Parser function using argparse"""
+    # parser.add_argument('directory', help='directory use',
+    #                     action='store', nargs='*')
+    parser.add_argument("files", nargs="+")
+    return parser.parse_args()
 
-# d = pq(filename='20160319RHIL0_edit.xml')
+fileList = GetArgs(parser)
+print(fileList.files)
 
-for items in fileResult:
+data = []
+frames = pd.DataFrame([])
+
+attrs = ('id', 'horse')
+
+for items in fileList.files:
     d = pq(filename=items)
     res = d('nomination')
-    attrs = ('id', 'horse')
-    data = [[res.eq(i).attr(x) for x in attrs] for i in range(len(res))]
+    dataSets = [[res.eq(i).attr(x)
+                 for x in attrs] for i in range(len(res))]
+    print(dataSets)
+    aDF = pd.DataFrame(dataSets)
+    frames = frames.append(aDF)
 
-    # from nominations
-# res = d('nomination')
-# nomID = [res.eq(i).attr('id') for i in range(len(res))]
-# horseName = [res.eq(i).attr('horse') for i in range(len(res))]
 
-# attrs = ('id', 'horse')
-
-frames = pd.DataFrame(data)
 print(frames)
