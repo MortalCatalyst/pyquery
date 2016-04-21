@@ -33,3 +33,4 @@ for items in fileList.files:
 
 
 print(frames)
+frames.to_csv('~/testingFrame.csv', encoding='utf-8')
